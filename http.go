@@ -34,7 +34,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Please specify a stream!", http.StatusInternalServerError)
 		return
 	}
-
+	nameCliente := r.URL.Query().Get("cliente")
+	if nameCliente == "" {
+		http.Error(w, "Please specify a cliente name!", http.StatusInternalServerError)
+		return
+	}
 	stream := s.getStream(streamID)
 
 	if stream == nil {
@@ -57,7 +61,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create the stream subscriber
-	sub := stream.addSubscriber(eventid, r.URL)
+	sub := stream.addSubscriber(nameCliente, eventid, r.URL)
 
 	go func() {
 		<-r.Context().Done()

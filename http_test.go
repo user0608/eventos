@@ -25,7 +25,7 @@ func TestHTTPStreamHandler(t *testing.T) {
 
 	s.CreateStream("test")
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 
 	events := make(chan *Event)
 	var cErr error
@@ -64,7 +64,7 @@ func TestHTTPStreamHandlerExistingEvents(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 100)
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 
 	events := make(chan *Event)
 	var cErr error
@@ -101,7 +101,7 @@ func TestHTTPStreamHandlerEventID(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 100)
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 	c.EventID = "2"
 
 	events := make(chan *Event)
@@ -140,7 +140,7 @@ func TestHTTPStreamHandlerEventTTL(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 100)
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 
 	events := make(chan *Event)
 	var cErr error
@@ -169,7 +169,7 @@ func TestHTTPStreamHandlerHeaderFlushIfNoEvents(t *testing.T) {
 
 	s.CreateStream("test")
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 
 	subscribed := make(chan struct{})
 	events := make(chan *Event)
@@ -199,7 +199,7 @@ func TestHTTPStreamHandlerAutoStream(t *testing.T) {
 	mux.HandleFunc("/events", sseServer.ServeHTTP)
 	server := httptest.NewServer(mux)
 
-	c := NewClient(server.URL + "/events")
+	c := NewClient(server.URL + "/events?cliente=prueba")
 
 	events := make(chan *Event)
 

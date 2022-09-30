@@ -8,6 +8,7 @@ import "net/url"
 
 // Subscriber ...
 type Subscriber struct {
+	Name       string
 	quit       chan *Subscriber
 	connection chan *Event
 	removed    chan struct{}
