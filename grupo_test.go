@@ -16,7 +16,7 @@ import (
 // Maybe fix this in the future so we can test with -race enabled
 
 func TestStreamAddSubscriber(t *testing.T) {
-	s := newStream("test", 1024, true, false, nil, nil)
+	s := newGrupo("test", 1024, true, false, nil, nil)
 	s.run()
 	defer s.close()
 
@@ -34,7 +34,7 @@ func TestStreamAddSubscriber(t *testing.T) {
 }
 
 // func TestStreamRemoveSubscriber(t *testing.T) {
-// 	s := newStream("test", 1024, true, false, nil, nil)
+// 	s := newGrupo("test", 1024, true, false, nil, nil)
 // 	s.run()
 // 	defer s.close()
 
@@ -46,7 +46,7 @@ func TestStreamAddSubscriber(t *testing.T) {
 // }
 
 func TestStreamSubscriberClose(t *testing.T) {
-	s := newStream("test", 1024, true, false, nil, nil)
+	s := newGrupo("test", 1024, true, false, nil, nil)
 	s.run()
 	defer s.close()
 
@@ -58,7 +58,7 @@ func TestStreamSubscriberClose(t *testing.T) {
 }
 
 func TestStreamDisableAutoReplay(t *testing.T) {
-	s := newStream("test", 1024, true, false, nil, nil)
+	s := newGrupo("test", 1024, true, false, nil, nil)
 	s.run()
 	defer s.close()
 
@@ -71,21 +71,21 @@ func TestStreamDisableAutoReplay(t *testing.T) {
 }
 
 func TestStreamMultipleSubscribers(t *testing.T) {
-	var subs []*Subscriber
+	var conns []*Connection
 
-	s := newStream("test", 1024, true, false, nil, nil)
+	s := newGrupo("test", 1024, true, false, nil, nil)
 	s.run()
 
 	for i := 0; i < 10; i++ {
-		subs = append(subs, s.addSubscriber("prueba", 0, nil))
+		conns = append(conns, s.addSubscriber("prueba", 0, nil))
 	}
 
 	// Wait for all subscribers to be added
 	time.Sleep(time.Millisecond * 100)
 
 	s.event <- &Event{Data: []byte("test")}
-	for _, sub := range subs {
-		msg, err := wait(sub.connection, time.Second*1)
+	for _, conn := range conns {
+		msg, err := wait(conn.connection, time.Second*1)
 		require.Nil(t, err)
 		assert.Equal(t, []byte(`test`), msg)
 	}

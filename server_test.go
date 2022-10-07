@@ -40,14 +40,14 @@ func TestServerCreateStream(t *testing.T) {
 	s := New()
 	defer s.Close()
 
-	s.CreateStream("test")
+	s.CreateGrupo("test")
 
-	assert.NotNil(t, s.getStream("test"))
+	assert.NotNil(t, s.getGrupo("test"))
 }
 
 func TestServerWithCallback(t *testing.T) {
-	funcA := func(string, *Subscriber) {}
-	funcB := func(string, *Subscriber) {}
+	funcA := func(string, *Connection) {}
+	funcB := func(string, *Connection) {}
 
 	s := NewWithCallback(funcA, funcB)
 	defer s.Close()
@@ -59,13 +59,13 @@ func TestServerCreateExistingStream(t *testing.T) {
 	s := New()
 	defer s.Close()
 
-	s.CreateStream("test")
+	s.CreateGrupo("test")
 
 	numGoRoutines := runtime.NumGoroutine()
 
-	s.CreateStream("test")
+	s.CreateGrupo("test")
 
-	assert.NotNil(t, s.getStream("test"))
+	assert.NotNil(t, s.getGrupo("test"))
 	assert.Equal(t, numGoRoutines, runtime.NumGoroutine())
 }
 
@@ -73,10 +73,10 @@ func TestServerRemoveStream(t *testing.T) {
 	s := New()
 	defer s.Close()
 
-	s.CreateStream("test")
+	s.CreateGrupo("test")
 	s.RemoveStream("test")
 
-	assert.Nil(t, s.getStream("test"))
+	assert.Nil(t, s.getGrupo("test"))
 }
 
 func TestServerRemoveNonExistentStream(t *testing.T) {
@@ -92,8 +92,8 @@ func TestServerExistingStreamPublish(t *testing.T) {
 	s := New()
 	defer s.Close()
 
-	s.CreateStream("test")
-	stream := s.getStream("test")
+	s.CreateGrupo("test")
+	stream := s.getGrupo("test")
 	sub := stream.addSubscriber("prueba", 0, nil)
 
 	s.Publish("test", &Event{Data: []byte("test")})

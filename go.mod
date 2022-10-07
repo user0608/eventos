@@ -1,4 +1,4 @@
-module github.com/user0608/sse
+module github.com/user0608/eventos
 
 go 1.19
 

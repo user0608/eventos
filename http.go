@@ -29,25 +29,21 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get the StreamID from the URL
-	streamID := r.URL.Query().Get("stream")
-	if streamID == "" {
-		http.Error(w, "Please specify a stream!", http.StatusInternalServerError)
+	grupoID := r.URL.Query().Get("grupo")
+	if grupoID == "" {
+		http.Error(w, "Please specify a grupo!", http.StatusInternalServerError)
 		return
 	}
-	nameCliente := r.URL.Query().Get("cliente")
-	if nameCliente == "" {
-		http.Error(w, "Please specify a cliente name!", http.StatusInternalServerError)
-		return
-	}
-	stream := s.getStream(streamID)
+	nameCliente := r.URL.Query().Get("cliente") // can be a username
+	grupo := s.getGrupo(grupoID)
 
-	if stream == nil {
+	if grupo == nil {
 		if !s.AutoStream {
 			http.Error(w, "Stream not found!", http.StatusInternalServerError)
 			return
 		}
 
-		stream = s.CreateStream(streamID)
+		grupo = s.CreateGrupo(grupoID)
 	}
 
 	eventid := 0
@@ -61,15 +57,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create the stream subscriber
-	sub := stream.addSubscriber(nameCliente, eventid, r.URL)
+	sub := grupo.addSubscriber(nameCliente, eventid, r.URL)
 
 	go func() {
 		<-r.Context().Done()
 
 		sub.close()
 
-		if s.AutoStream && !s.AutoReplay && stream.getSubscriberCount() == 0 {
-			s.RemoveStream(streamID)
+		if s.AutoStream && !s.AutoReplay && grupo.getSubscriberCount() == 0 {
+			s.RemoveStream(grupoID)
 		}
 	}()
 

@@ -14,12 +14,16 @@ import (
 
 // Event holds all of the event source fields
 type Event struct {
-	timestamp time.Time
 	ID        []byte
 	Data      []byte
 	Event     []byte
 	Retry     []byte
 	Comment   []byte
+	timestamp time.Time
+}
+type TargetEvent struct {
+	ClientName string
+	*Event
 }
 
 func (e *Event) hasContent() bool {

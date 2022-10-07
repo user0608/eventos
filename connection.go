@@ -7,9 +7,9 @@ package sse
 import "net/url"
 
 // Subscriber ...
-type Subscriber struct {
+type Connection struct {
 	Name       string
-	quit       chan *Subscriber
+	quit       chan *Connection
 	connection chan *Event
 	removed    chan struct{}
 	eventid    int
@@ -17,7 +17,7 @@ type Subscriber struct {
 }
 
 // Close will let the stream know that the clients connection has terminated
-func (s *Subscriber) close() {
+func (s *Connection) close() {
 	s.quit <- s
 	if s.removed != nil {
 		<-s.removed
