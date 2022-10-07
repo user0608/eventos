@@ -6,13 +6,13 @@ SSE is a client/server implementation for Server Sent Events for Golang.
 
 ## Build status
 
-* Master: [![CircleCI  Master](https://circleci.com/gh/r3labs/sse.svg?style=svg)](https://circleci.com/gh/r3labs/sse)
+* Master: [![CircleCI  Master](https://circleci.com/gh/r3labs/eventos.svg?style=svg)](https://circleci.com/gh/r3labs/eventos)
 
 ## Quick start
 
 To install:
 ```
-go get github.com/r3labs/sse/v2
+go get github.com/r3labs/eventos/v2
 ```
 
 To Test:
@@ -29,7 +29,7 @@ The messaging system is started when running:
 
 ```go
 func main() {
-	server := sse.New()
+	server := eventos.New()
 }
 ```
 
@@ -37,7 +37,7 @@ To add a stream to this handler:
 
 ```go
 func main() {
-	server := sse.New()
+	server := eventos.New()
 	server.CreateStream("messages")
 }
 ```
@@ -54,7 +54,7 @@ In order to start the http server:
 
 ```go
 func main() {
-	server := sse.New()
+	server := eventos.New()
 
 	// Create a new Mux and set the handler
 	mux := http.NewServeMux()
@@ -68,10 +68,10 @@ To publish messages to a stream:
 
 ```go
 func main() {
-	server := sse.New()
+	server := eventos.New()
 
 	// Publish a payload to the stream
-	server.Publish("messages", &sse.Event{
+	server.Publish("messages", &eventos.Event{
 		Data: []byte("ping"),
 	})
 }
@@ -83,7 +83,7 @@ A way to detect disconnected clients:
 
 ```go
 func main() {
-	server := sse.New()
+	server := eventos.New()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/events", func(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +109,7 @@ To create a new client:
 
 ```go
 func main() {
-	client := sse.NewClient("http://server/events")
+	client := eventos.NewClient("http://server/events")
 }
 ```
 
@@ -117,9 +117,9 @@ To subscribe to an event stream, please use the Subscribe function. This accepts
 
 ```go
 func main() {
-	client := sse.NewClient("http://server/events")
+	client := eventos.NewClient("http://server/events")
 
-	client.Subscribe("messages", func(msg *sse.Event) {
+	client.Subscribe("messages", func(msg *eventos.Event) {
 		// Got some data!
 		fmt.Println(msg.Data)
 	})
@@ -132,9 +132,9 @@ If you wish to have events sent to a channel, you can use SubscribeChan:
 
 ```go
 func main() {
-	events := make(chan *sse.Event)
+	events := make(chan *eventos.Event)
 
-	client := sse.NewClient("http://server/events")
+	client := eventos.NewClient("http://server/events")
 	client.SubscribeChan("messages", events)
 }
 ```
@@ -145,7 +145,7 @@ To add additional parameters to the http client, such as disabling ssl verificat
 
 ```go
 func main() {
-	client := sse.NewClient("http://server/events")
+	client := eventos.NewClient("http://server/events")
 	client.Connection.Transport =  &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -158,9 +158,9 @@ To set custom query parameters on the client or disable the stream parameter alt
 
 ```go
 func main() {
-	client := sse.NewClient("http://server/events?search=example")
+	client := eventos.NewClient("http://server/events?search=example")
 
-	client.SubscribeRaw(func(msg *sse.Event) {
+	client.SubscribeRaw(func(msg *eventos.Event) {
 		// Got some data!
 		fmt.Println(msg.Data)
 	})

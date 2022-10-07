@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package sse
+package eventos
 
 import (
 	"bytes"
@@ -240,12 +240,12 @@ func (c *Client) readLoop(reader *EventStreamReader, outCh chan *Event, erChan c
 	}
 }
 
-// SubscribeRaw to an sse endpoint
+// SubscribeRaw to an eventos endpoint
 func (c *Client) SubscribeRaw(handler func(msg *Event)) error {
 	return c.Subscribe("", handler)
 }
 
-// SubscribeRawWithContext to an sse endpoint with context
+// SubscribeRawWithContext to an eventos endpoint with context
 func (c *Client) SubscribeRawWithContext(ctx context.Context, handler func(msg *Event)) error {
 	return c.SubscribeWithContext(ctx, "", handler)
 }
